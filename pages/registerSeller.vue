@@ -13,6 +13,16 @@
         />
       </div>
       <div class="form-group">
+        <label for="credential">Credential</label>
+        <input
+          type="text"
+          class="form-control"
+          id="credential"
+          v-model="credential"
+          required
+        />
+      </div>
+      <div class="form-group">
         <label for="dob">Date of Birth</label>
         <input
           type="date"
@@ -32,34 +42,31 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
       name: "",
       dob: "",
+      credential: "",
       sellerAdded: false,
     };
   },
   methods: {
-    registerSeller() {
+    async registerSeller() {
       const newSeller = {
         name: this.name,
-        dob: this.dob,
+        birthday: this.dob,
+        credential: this.credential
       };
 
       let sellerAdded;
-      const sellers = JSON.parse(localStorage.getItem("sellers")) || [];
-
       try {
-        sellers.push(newSeller);
-        this.sellerAdded = true;
-        console.log("seller added");
+        res = await axios.post('/api/seller', null, {params: newSeller});
+        // SHOW OK !!
       } catch (error) {
         console.error(error);
       }
-
-      localStorage.setItem("sellers", JSON.stringify(sellers));
-
       this.name = "";
       this.dob = "";
     },

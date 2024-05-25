@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-5">
-    <h1 class="mb-4">Vehicle Details for {{ model }}</h1>
+    <h1 class="mb-4">Vehicle Details</h1>
     <div v-if="vehicle">
       <div class="card mb-3">
         <div class="card-body">
@@ -9,14 +9,14 @@
             <strong>Year:</strong> {{ vehicle.year }}<br />
             <strong>Color:</strong> {{ vehicle.color }}<br />
             <strong>Type:</strong> {{ vehicle.type }}<br />
-            <span v-if="vehicle.type === 'car'">
+            <span v-if="vehicle.hasTrunk === undefined">
               <strong>Doors:</strong> {{ vehicle.amountDoor }}<br />
               <strong>Fuel Type:</strong> {{ vehicle.fuelType }}<br />
               <strong>Trunk Capacity:</strong>
               {{ vehicle.trunkCapacity }} L<br />
               <strong>Price:</strong> $ {{ vehicle.price }}<br />
             </span>
-            <span v-if="vehicle.type === 'moto'">
+            <span v-if="vehicle.amountDoor === undefined">
               <strong>Has Trunk:</strong> {{ vehicle.hasTrunk }}<br />
               <strong>Starting Type:</strong> {{ vehicle.startingType }}<br />
               <strong>Seat Height:</strong> {{ vehicle.seatHeight }} cm<br />
@@ -24,6 +24,17 @@
             </span>
           </p>
         </div>
+      </div>
+      <div class="form-group">
+        <label for="price">Price in €</label>
+        <input
+          type="number"
+          name="Price"
+          class="form-control"
+          id="price"
+          v-model="price"
+          required
+        />
       </div>
       <h3>Select Seller</h3>
       <form @submit.prevent="soldVehicle" class="d-flex flex-column gap-2">
@@ -35,12 +46,12 @@
               :key="seller.name"
               :value="seller.name"
             >
-              {{ seller.name }} - {{ seller.dob }}
+              {{ seller.name }}
             </option>
           </select>
         </div>
         <div class="d-flex flex-column align-items-center gap-2">
-          <button type="submit" class="btn btn-primary w-25">
+          <button type="submit" class="btn btn-primary w-25" v-on:click="assignSeller">
             Assign Seller
           </button>
         </div>
@@ -56,57 +67,42 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
-      model: "",
+      id: "",
       vehicle: null,
       sellers: [],
       selectedSeller: "",
       sellerAssigned: false,
+      price: 0
     };
   },
   async mounted() {
-    this.model = this.$route.params.model;
-    this.loadVehicle(this.model);
+    this.id = this.$route.params.id;
+    this.loadVehicle(this.id);
     this.loadSellers();
   },
   methods: {
-    loadVehicle(model) {
-      const vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
-      this.vehicle = vehicles.find((vehicle) => vehicle.model === model);
+    async loadVehicle(id) {
+      const vehiclesJSON = await axios.get('/api/vehicle');
+      const vehicles = vehiclesJSON.data;
+      console.log(vehicles);
+      this.vehicle = vehicles.find((vehicle) => vehicle.id == id);
+      console.log(this.vehicle);
     },
-    loadSellers() {
-      const sellers = JSON.parse(localStorage.getItem("sellers")) || [];
-      this.sellers = sellers;
+    async loadSellers() {
+      const sellersJSON = await axios.get('/api/seller')
+      this.sellers = sellersJSON.data;
+      console.log(this.sellers);
     },
-    assignSeller() {
+    async assignSeller() {
       if (this.selectedSeller && this.vehicle) {
-        const vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
-        const vehicleIndex = vehicles.findIndex(
-          (v) => v.model === this.vehicle.model
-        );
-
-        if (vehicleIndex !== -1) {
-          vehicles[vehicleIndex].sellerId = this.selectedSeller;
-          localStorage.setItem("vehicles", JSON.stringify(vehicles));
-          this.sellerAssigned = true;
-          setTimeout(() => {
-            this.sellerAssigned = false;
-          }, 3000);
-        }
+        const paramsSale = {id: this.vehicle.id, credential: this.selectedSeller.credential, price: this.price};
+        const res = await axios.post('/api/sale', null, {params: paramsSale})
+        console.log(res);
       }
-    },
-    soldVehicle() {
-      const soldVehicle = {
-        ...this.vehicle,
-        seller: this.selectedSeller,
-      };
-
-      const soldVehicles =
-        JSON.parse(localStorage.getItem("soldVehicles")) || [];
-      soldVehicles.push(soldVehicle);
-      localStorage.setItem("soldVehicles", JSON.stringify(soldVehicles));
     },
   },
 };

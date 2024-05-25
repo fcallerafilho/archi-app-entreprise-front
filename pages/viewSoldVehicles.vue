@@ -1,34 +1,17 @@
 <template>
   <div class="container mt-5">
-    <h1 class="mb-4">All Sold Vehicles</h1>
-    <div v-if="soldVehicles.length === 0">
-      <p>No vehicles found.</p>
+    <h1 class="mb-4">All Sales</h1>
+    <div v-if="sales.length === 0">
+      <p>No sales found.</p>
     </div>
     <div v-else>
-      <div
-        v-for="vehicle in soldVehicles"
-        :key="vehicle.model"
-        class="card mb-3"
-      >
+      <div v-for="sale in sales" class="card mb-3">
         <div class="card-body">
-          <h5 class="card-title">{{ vehicle.brand }} {{ vehicle.model }}</h5>
+          <h5 class="card-title">{{sale.vehicleinfo }}</h5>
           <p class="card-text">
-            <strong>Year:</strong> {{ vehicle.year }}<br />
-            <strong>Color:</strong> {{ vehicle.color }}<br />
-            <strong>Type:</strong> {{ vehicle.type }}<br />
-            <span v-if="vehicle.type === 'car'">
-              <strong>Doors:</strong> {{ vehicle.amountDoor }}<br />
-              <strong>Fuel Type:</strong> {{ vehicle.fuelType }}<br />
-              <strong>Trunk Capacity:</strong>
-              {{ vehicle.trunkCapacity }} L<br />
-              <strong>Seller:</strong> {{ vehicle.seller }}<br />
-              <strong>Price:</strong> $ {{ vehicle.price }}<br />
-            </span>
-            <span v-if="vehicle.type === 'moto'">
-              <strong>Has Trunk:</strong> {{ vehicle.hasTrunk }}<br />
-              <strong>Starting Type:</strong> {{ vehicle.startingType }}<br />
-              <strong>Seat Height:</strong> $ {{ vehicle.seatHeight }} cm<br />
-            </span>
+              <strong>Seller:</strong> {{ sale.sellername }}<br />
+              <strong>Price:</strong> {{ sale.price }} € <br />
+              <strong>Date:</strong> {{ sale.date }}<br />
           </p>
         </div>
       </div>
@@ -37,20 +20,21 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
-      soldVehicles: [],
+      sales: [],
     };
   },
   mounted() {
-    this.loadSoldVehicles();
+    this.loadSales();
   },
   methods: {
-    loadSoldVehicles() {
-      const soldVehicles =
-        JSON.parse(localStorage.getItem("soldVehicles")) || [];
-      this.soldVehicles = soldVehicles;
+    async loadSales() {
+      const salesJSON = await axios.get('/api/sale');
+      console.log(salesJSON.data);
+      this.sales = salesJSON.data;
     },
   },
 };

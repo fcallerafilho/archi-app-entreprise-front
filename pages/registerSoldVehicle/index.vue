@@ -5,7 +5,7 @@
       <p>No vehicles found.</p>
     </div>
     <div v-else>
-      <div class="card mb-3" v-for="vehicle in vehicles" :key="vehicle.model">
+      <div class="card mb-3" v-for="vehicle in vehicles" :key="vehicle.id">
         <div class="card-body">
           <h5 class="card-title">{{ vehicle.brand }} {{ vehicle.model }}</h5>
           <p class="card-text">
@@ -27,7 +27,7 @@
             </span>
           </p>
           <NuxtLink
-            :to="'/registerSoldVehicle/' + encodeURIComponent(vehicle.model)"
+            :to="'/registerSoldVehicle/' + encodeURIComponent(vehicle.id)"
             class="btn btn-primary"
             >View Details</NuxtLink
           >
@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
@@ -48,9 +49,11 @@ export default {
     this.loadVehicles();
   },
   methods: {
-    loadVehicles() {
-      const vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
-      this.vehicles = vehicles;
+    async loadVehicles()  {
+      // const vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
+      const vehiclesJSON = await axios.get('/api/vehicle');
+      console.log(vehiclesJSON.data)
+      this.vehicles = vehiclesJSON.data;
     },
   },
 };
