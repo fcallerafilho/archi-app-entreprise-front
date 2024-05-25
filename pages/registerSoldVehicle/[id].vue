@@ -40,11 +40,11 @@
       <form @submit.prevent="soldVehicle" class="d-flex flex-column gap-2">
         <div class="form-group">
           <label for="seller" class="py-1">Seller</label>
-          <select class="form-control" id="seller" v-model="selectedSeller">
+          <select class="form-control" id="seller" v-model="selectedSellerCredential">
             <option
               v-for="seller in sellers"
-              :key="seller.name"
-              :value="seller.name"
+              :key="seller.credential"
+              :value="seller.credential"
             >
               {{ seller.name }}
             </option>
@@ -74,7 +74,7 @@ export default {
       id: "",
       vehicle: null,
       sellers: [],
-      selectedSeller: "",
+      selectedSellerCredential: "",
       sellerAssigned: false,
       price: 0
     };
@@ -98,8 +98,9 @@ export default {
       console.log(this.sellers);
     },
     async assignSeller() {
-      if (this.selectedSeller && this.vehicle) {
-        const paramsSale = {id: this.vehicle.id, credential: this.selectedSeller.credential, price: this.price};
+      if (this.selectedSellerCredential && this.vehicle) {
+        const paramsSale = {id: this.vehicle.id, credential: this.selectedSellerCredential, price: this.price};
+        console.log(this.selectedSellerCredential);
         const res = await axios.post('/api/sale', null, {params: paramsSale})
         console.log(res);
       }

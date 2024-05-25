@@ -178,7 +178,7 @@ export default {
     };
   },
   methods: {
-    registerVehicle() {
+    async registerVehicle() {
       const newVehicle = {
         brand: this.brand,
         model: this.model,
@@ -199,11 +199,16 @@ export default {
         newVehicle.price = this.price;
       }
 
-      const vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
-
-      vehicles.push(newVehicle);
-
-      localStorage.setItem("vehicles", JSON.stringify(vehicles));
+      var res = "nok";
+      // send newVehicle
+      if(newVehicle.type === "moto") {
+        res = await axios.post('/api/moto', null, {params: newVehicle})
+      }else{
+        res = await axios.post('/api/car', null, {params: newVehicle})
+      }
+      if(res != "ok"){ // show errorMessage (if possible)
+        return;
+      }
 
       this.brand = "";
       this.model = "";
