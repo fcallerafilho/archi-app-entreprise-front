@@ -7,11 +7,10 @@
     <div v-else>
       <div v-for="sale in sales" class="card mb-3">
         <div class="card-body">
-          <h5 class="card-title">{{sale.vehicleinfo }}</h5>
+          <h5 class="card-title">{{ sale.vehicleinfo }}</h5>
           <p class="card-text">
-              <strong>Seller:</strong> {{ sale.sellername }}<br />
-              <strong>Price:</strong> {{ sale.price }} € <br />
-              <strong>Date:</strong> {{ sale.date }}<br />
+            <strong>Seller:</strong> {{ sale.sellername }}<br />
+            <strong>Date:</strong> {{ sale.date }}<br />
           </p>
         </div>
       </div>
@@ -20,7 +19,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 export default {
   data() {
     return {
@@ -32,7 +31,7 @@ export default {
   },
   methods: {
     async loadSales() {
-      const salesJSON = await axios.get('/api/sale');
+      const salesJSON = await axios.get("/api/sale");
       console.log(salesJSON.data);
       this.sales = salesJSON.data;
     },

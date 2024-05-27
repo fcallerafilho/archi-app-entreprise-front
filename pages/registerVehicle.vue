@@ -84,16 +84,6 @@
               required
             />
           </div>
-          <div class="form-group">
-            <label for="price">Price</label>
-            <input
-              type="number"
-              class="form-control"
-              id="price"
-              v-model="price"
-              required
-            />
-          </div>
         </div>
 
         <div v-if="type === 'moto'" class="d-flex flex-column gap-3">
@@ -130,16 +120,6 @@
               required
             />
           </div>
-          <div class="form-group">
-            <label for="price">Price</label>
-            <input
-              type="number"
-              class="form-control"
-              id="price"
-              v-model="price"
-              required
-            />
-          </div>
         </div>
 
         <div class="d-flex flex-column align-items-center gap-2 pb-5">
@@ -173,7 +153,6 @@ export default {
       hasTrunk: "",
       startingType: "",
       seatHeight: "",
-      price: "",
       vehicleAdded: false,
     };
   },
@@ -191,7 +170,6 @@ export default {
         newVehicle.amountDoor = this.amountDoor;
         newVehicle.fuelType = this.fuelType;
         newVehicle.trunkCapacity = this.trunkCapacity;
-        newVehicle.price = this.price;
       } else if (this.type === "moto") {
         newVehicle.hasTrunk = this.hasTrunk;
         newVehicle.startingType = this.startingType;
@@ -201,12 +179,13 @@ export default {
 
       var res = "nok";
       // send newVehicle
-      if(newVehicle.type === "moto") {
-        res = await axios.post('/api/moto', null, {params: newVehicle})
-      }else{
-        res = await axios.post('/api/car', null, {params: newVehicle})
+      if (newVehicle.type === "moto") {
+        res = await axios.post("/api/moto", null, { params: newVehicle });
+      } else {
+        res = await axios.post("/api/car", null, { params: newVehicle });
       }
-      if(res != "ok"){ // show errorMessage (if possible)
+      if (res != "ok") {
+        // show errorMessage (if possible)
         return;
       }
 
