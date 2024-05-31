@@ -35,14 +35,16 @@
       </div>
       <div class="d-flex flex-column align-items-center gap-2 pt-3">
         <button type="submit" class="btn btn-primary w-25">Register</button>
-        <p v-if="sellerAdded">Seller added successfully!</p>
+        <div v-if="sellerAdded" class="alert alert-success mt-3">
+          Seller registered successfully!
+        </div>
       </div>
     </form>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 export default {
   data() {
     return {
@@ -57,18 +59,29 @@ export default {
       const newSeller = {
         name: this.name,
         birthday: this.dob,
-        credential: this.credential
+        credential: this.credential,
       };
 
-      let sellerAdded;
+      let res;
       try {
-        res = await axios.post('/api/seller', null, {params: newSeller});
-        // SHOW OK !!
+        res = await axios.post("/api/seller", null, { params: newSeller });
       } catch (error) {
         console.error(error);
       }
-      this.name = "";
-      this.dob = "";
+      if (res.data != "ok") {
+        // show errorMessage (if possible)
+        return;
+      } else {
+        this.sellerAdded = true;
+      }
+
+      //clean form
+      setTimeout(() => {
+        this.sellerAdded = false;
+        this.name = "";
+        this.credential = "";
+        this.dob = "";
+      }, 3000);
     },
   },
 };

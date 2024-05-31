@@ -24,13 +24,13 @@
             >
           </li>
           <li class="nav-item">
-            <NuxtLink class="nav-link" to="/registerSoldVehicle/"
-              >Register Sold Vehicle</NuxtLink
+            <NuxtLink class="nav-link" to="/registerSeller"
+              >Register Seller</NuxtLink
             >
           </li>
           <li class="nav-item">
-            <NuxtLink class="nav-link" to="/registerSeller"
-              >Register Seller</NuxtLink
+            <NuxtLink class="nav-link" to="/registerSoldVehicle/"
+              >Register Sold Vehicle</NuxtLink
             >
           </li>
           <li class="nav-item">

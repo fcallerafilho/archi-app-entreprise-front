@@ -124,11 +124,7 @@
 
         <div class="d-flex flex-column align-items-center gap-2 pb-5">
           <button type="submit" class="btn btn-primary w-25">Register</button>
-          <div
-            v-if="vehicleAdded"
-            class="alert alert-success mt-3"
-            role="alert"
-          >
+          <div v-if="vehicleAdded" class="alert alert-success mt-3">
             Vehicle registered successfully!
           </div>
         </div>
@@ -181,30 +177,32 @@ export default {
       // send newVehicle
       if (newVehicle.type === "moto") {
         res = await axios.post("/api/moto", null, { params: newVehicle });
+        console.log(res);
       } else {
         res = await axios.post("/api/car", null, { params: newVehicle });
+        console.log(res);
       }
-      if (res != "ok") {
+      if (res.data != "ok") {
         // show errorMessage (if possible)
         return;
+      } else {
+        this.vehicleAdded = true;
       }
 
-      this.brand = "";
-      this.model = "";
-      this.year = "";
-      this.color = "";
-      this.type = "";
-      this.amountDoor = "";
-      this.fuelType = "";
-      this.trunkCapacity = "";
-      this.hasTrunk = "";
-      this.startingType = "";
-      this.seatHeight = "";
-
-      this.vehicleAdded = true;
-
+      //clean form
       setTimeout(() => {
         this.vehicleAdded = false;
+        this.brand = "";
+        this.model = "";
+        this.year = "";
+        this.color = "";
+        this.type = "";
+        this.amountDoor = "";
+        this.fuelType = "";
+        this.trunkCapacity = "";
+        this.hasTrunk = "";
+        this.startingType = "";
+        this.seatHeight = "";
       }, 5000);
     },
   },
