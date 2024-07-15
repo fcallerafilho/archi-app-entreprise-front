@@ -9,4 +9,4 @@ npm i
 npm run dev
 ```
 
-For the backend, you must have a MySql database that your are going to link to the Spring Boot code in the application.properties file. Once your username, password, and name of the chosen database are set in this file, everything is ready to run. 
+For the backend, you must have a MySql database that you are going to link to the Spring Boot code in the application.properties file. Once your username, password, and name of the chosen database are set in this file, everything is ready to run. 
